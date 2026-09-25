@@ -1,0 +1,48 @@
+# ===== ĐỔI 2 DÒNG CÓ CHỮ "ĐỔI" TRƯỚC KHI DEPLOY =====
+backend:
+  name: github
+  repo: YOUR_GITHUB_USERNAME/decap-demo   # ĐỔI: username/tên-repo của anh
+  branch: main
+  base_url: https://decap-demo.pages.dev  # ĐỔI: domain Cloudflare Pages của anh
+  auth_endpoint: api/auth
+
+# Chạy thử trên máy: "npm run cms" + "npm run dev", rồi mở localhost:3000/admin/index.html
+local_backend: true
+
+locale: vi
+media_folder: public/uploads   # ảnh upload được lưu vào repo ở đây
+public_folder: /uploads        # đường dẫn ảnh khi hiển thị trên web
+
+# Tên file/URL project luôn không dấu: "Dự án thứ ba" -> du-an-thu-ba
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  # Singleton: chỉ sửa, không thêm được
+  - name: pages
+    label: Trang
+    files:
+      - name: site
+        label: Trang chủ
+        file: content/site.json
+        fields:
+          - { name: title, label: Tiêu đề, widget: string }
+          - { name: intro, label: Giới thiệu, widget: text }
+
+  # Collection: khách bấm "New Project" để thêm project
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: content/projects
+    extension: json
+    format: json
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    fields:
+      - { name: title, label: Tên project, widget: string }
+      - { name: year, label: Năm, widget: number, value_type: int }
+      - { name: cover, label: Ảnh cover, widget: image, required: false }
+      - { name: description, label: Mô tả, widget: text }
